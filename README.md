@@ -4,9 +4,9 @@ A template created with vanilla PHP for creating APIs
 * [2021-01-29] - First version released | Writing the documentation
 * [2021-02-01] - Documentation update | Controller documentation written. Writing the other parts.
 
-#Getting started
+# Getting started
 
-##Routes
+## Routes
 
 All routes must be listed in the **routes.php** file.
 Path: src / Routes / routes.php
@@ -17,7 +17,7 @@ The recommended method for routes in version 1.0 is always the **POST** method, 
 
 It is desirable that every route redirects to the **resource** method, this method is present in all controllers and it redirects to the desired path (See more about this in the controllers section).
 
-##Controllers
+## Controllers
 
 All controllers need to extend the parent class **Controller**, the **Controller** class that has the **resource** method responsible for redirecting internal paths within the controller.
 
@@ -25,7 +25,7 @@ The **ways** method must be implemented in all controllers, and in it the distri
 
 ![ControllerImage](https://i.imgur.com/dc6uLOe.png)
 
-#####Method Ways:
+##### Method Ways:
 
 The ways method is responsible for handling the internal redirection and authentication of each route. The $ways array must contain as its index the "resource" and as its only two properties the method of the controller to be executed and the type of authentication, respectively.
 
@@ -37,9 +37,9 @@ The **resource** index of the **ways** method must always be sent as a parameter
 
 ![MethodWithvalue](https://i.imgur.com/ZMMtSjK.png)
 
-##Models
+## Models
 
 
-*Database
-*Middleware
-*Helpers
+## Database
+## Middleware
+## Helpers
