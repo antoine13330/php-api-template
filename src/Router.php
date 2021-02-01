@@ -41,7 +41,7 @@ class Router
             return send(["error" => 'internal error'], 500);
         }
 
-        $controller = "Igor\Api\Controllers\\".$controller;
+        $controller = "Igor\\Api\\Controllers\\".$controller;
 
         $control = new $controller();
         return $control->$method();
