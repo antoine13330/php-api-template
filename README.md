@@ -3,6 +3,7 @@ A template created with vanilla PHP for creating APIs
 
 * [2021-01-29] - First version released | Writing the documentation
 * [2021-02-01] - Documentation update | Controller documentation written. Writing the other parts.
+* [2021-02-04] - Documentation update | Model, Database and Middleware documentation written. Writing the Helpers part.
 
 # Getting started
 
@@ -81,7 +82,7 @@ In the above variables it is possible to control the **duration of the token**, 
 
 ![VariablesToken](https://i.imgur.com/shpcuta.png)
 
->To generate a new token, just call the **generateToken** method, passing the token **user id as a parameter**. This is the **default** method, if you wanted to **change the token payload**, you need to access the **AuthConfig** class and change the methods of **generating and validating** the tokens.
+>To generate a new token, just call the static method **auth**, passing the token **user id as a parameter**. This is the **default** method, if you wanted to **change the token payload**, you need to access the **AuthConfig** class and change the methods of **generating and validating** the tokens.
 
 ![GenerateToken](https://i.imgur.com/3GhaFlr.png)
 
