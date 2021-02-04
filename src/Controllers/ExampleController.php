@@ -18,7 +18,8 @@ class ExampleController extends Controller
     protected function ways($resource)
     {
         $ways = [
-            'example_route' => ['index', 'none']
+            'example_route' => ['index', 'none'],
+            'example_show' => ['show', 'none']
         ];
 
         return $ways[$resource];
@@ -27,5 +28,10 @@ class ExampleController extends Controller
     public function index()
     {
         return $this->example->index();
+    }
+
+    public function show($data)
+    {
+        return $this->example->authenticate($data);
     }
 }

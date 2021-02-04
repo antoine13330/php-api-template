@@ -11,7 +11,12 @@ class AuthConfig
     private String $typ = "JWT";
     private String $delimiter = 'Yhs';
 
-    public function generateToken(int $id)
+    public static function auth(int $id)
+    {
+        return (new AuthConfig())->generateToken($id);
+    }
+
+    private function generateToken(int $id)
     {
        $header = [
            "alg" => $this->alg,
