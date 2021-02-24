@@ -2,8 +2,9 @@
 A template created with vanilla PHP for creating APIs
 
 * [2021-01-29] - First version released | Writing the documentation
-* [2021-02-01] - Documentation update | Controller documentation written. Writing the other parts.
-* [2021-02-04] - Documentation update | Model, Database and Middleware documentation written. Writing the Helpers part.
+* [2021-02-01] - Documentation update   | Controller documentation written. Writing the other parts.
+* [2021-02-04] - Documentation update   | Model, Database and Middleware documentation written. Writing the Helpers part.
+* [2021-02-24] - Documentation update   | Validation helper written.HTTP helper in progress.
 
 # Getting started
 
@@ -89,3 +90,28 @@ In the above variables it is possible to control the **duration of the token**, 
 >Token generation example
 
 ## Helpers
+
+#### Validator
+
+The Helper Validator has as main objective to facilitate the validation of data received by the request, it has two main methods, the **required method** to handle mandatory data and the **refused method** for data that are not accepted.
+> The Validator helper can be found in **src / Helpers / Validator.php**
+
+##### Required
+
+The **required static method** aims to facilitate the use of mandatory fields, forcing the request to have all the necessary fields to execute the logic. __(See example below)__
+
+![RequiredHelper](https://i.imgur.com/AZgfK3X.png)
+> All fields inside the array will be required
+
+##### Refused
+
+The **refused static method** aims to prevent certain values from being sent in the request. __(See example below)__
+
+![RefusedHelper](https://i.imgur.com/W1JbiT0.png)
+> All fields inside the array will be refused
+
+#### Http
+
+Helper **Http** aims to facilitate Http requests, it works like the main Http verbs, has support for custom Headers and complex requests. Its only method is the static send method. __(Below is an example of a simple request.)__
+
+![SimpleHttpRequest](https://i.imgur.com/vEAtYwM.png)
