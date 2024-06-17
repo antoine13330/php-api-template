@@ -1,16 +1,16 @@
 <?php
 
-namespace Igor\Api\Models;
+namespace AntoineD\Api\Models;
 
-use Igor\Api\Helpers\Http;
-use Igor\Api\Middleware\AuthConfig;
-use Igor\Api\Helpers\Validator;
+use AntoineD\Api\Helpers\Http;
+use AntoineD\Api\Middleware\AuthConfig;
+use AntoineD\Api\Helpers\Validator;
 
 class Example extends Model
 {
-    public function index()
+    public function __construct()
     {
-        return send(['success' => 'congratulations! enjoy this template']);
+        parent::__construct('example');
     }
 
     public function requestExample($data)

@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Igor\Api\Middleware;
+namespace AntoineD\Api\Middleware;
 
 class AuthConfig
 {

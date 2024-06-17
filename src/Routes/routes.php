@@ -2,7 +2,7 @@
 
 function routes(){
     $routes = [
-        '/example' => ['method' => 'POST', 'controller' => 'ExampleController@resource'],
+        'users' => ['table' => 'users']
     ];
 
     return $routes;

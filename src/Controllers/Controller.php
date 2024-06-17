@@ -1,51 +1,121 @@
 <?php
 
+namespace AntoineD\Api\Controllers;
 
-namespace Igor\Api\Controllers;
+use Exception;
 
-require_once(__DIR__."/../Middleware/auth-middleware.php");
-include (__DIR__.'/../autoload.php');
-
-abstract class Controller
+class GenericController
 {
-    public function resource()
+    private string $modelClass;
+    public function __construct(string $modelClass)
     {
-        $data = $this->getData();
-        $way = $data['_'];
-        unset($data['_']);
+        // echo $modelClass;
+        $modelClass = ucfirst($modelClass);
 
-        $function = $this->ways($way);
-        $auth = $function[1];
-        unset($function[1]);
-        $function = $function[0];
-
-        if($function === '' || $function === NULL){
-            return send(["error" => 'resource not found'], 404);
+        if (substr($modelClass, -1) === 's') {
+            $modelClass = substr($modelClass, 0, -1);
         }
 
-        if(auth($auth)) return auth($auth);
+        $modelClass = "AntoineD\\Api\\Models\\$modelClass";
+        if (!class_exists($modelClass)) {
+            throw new Exception("Model class $modelClass does not exist");
+        }
 
-        return $this->$function($data);
+        $this->modelClass = $modelClass;
+
     }
 
-    protected abstract function ways($ways);
-
-    private function getData()
+    public function handleRequest()
     {
-        $data = $_POST;
-        if(count($data) == 0){
-            $data = file_get_contents('php://input');
-            $data = json_decode($data);
-            $temp[] = '';
-            foreach ($data as $key => $value){
-                $temp[$key] = $value;
-            }
-            $data = $temp;
-            unset($temp);
-            if(array_key_exists(0, $data)){
-                unset($data[0]);
-            }
+        $method = $_SERVER['REQUEST_METHOD'];
+        $uri = trim($_SERVER['REQUEST_URI'], '/');
+        $uriSegments = explode('/', $uri);
+
+        $id = $uriSegments[1] ?? null;
+
+        switch ($method) {
+            case 'GET':
+                if ($id) {
+                    $this->get($id);
+                } else {
+                    $this->getAll();
+                }
+                break;
+            case 'POST':
+                $this->post();
+                break;
+            case 'PUT':
+                if ($id) {
+                    $this->put($id);
+                } else {
+                    $this->sendResponse(400, "Bad Request: Missing ID for PUT request");
+                }
+                break;
+            case 'DELETE':
+                if ($id) {
+                    $this->delete($id);
+                } else {
+                    $this->sendResponse(400, "Bad Request: Missing ID for DELETE request");
+                }
+                break;
+            default:
+                $this->sendResponse(405, "Method Not Allowed");
+                break;
         }
-        return $data;
+    }
+
+    private function get(int $id)
+    {
+        $model = new $this->modelClass();
+        $result = $model->find($id);
+        $this->sendResponse(200, $result);
+    }
+
+    private function getAll()
+    {
+        $model = new $this->modelClass();
+        $result = $model->all();
+        $this->sendResponse(200, $result);
+    }
+
+    private function post()
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $this->sendResponse(400, "Invalid JSON");
+            return;
+        }
+
+        $model = new $this->modelClass();
+        $id = $model->create($data);
+        $this->sendResponse(201, ['id' => $id]);
+    }
+
+    private function put(int $id)
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $this->sendResponse(400, "Invalid JSON");
+            return;
+        }
+
+        $model = new $this->modelClass();
+        $rowCount = $model->update($id, $data);
+        $this->sendResponse(200, ['updated' => $rowCount]);
+    }
+
+    private function delete(int $id)
+    {
+        $model = new $this->modelClass();
+        $rowCount = $model->delete($id);
+        $this->sendResponse(200, ['deleted' => $rowCount]);
+    }
+
+    private function sendResponse(int $status, $data)
+    {
+        http_response_code($status);
+        header('Content-Type: application/json');
+        echo json_encode($data);
+        exit;
     }
 }

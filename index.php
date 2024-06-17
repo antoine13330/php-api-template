@@ -1,6 +1,6 @@
 <?php
 
-use Igor\Api\Router;
+use AntoineD\Api\Router;
 
 require_once ('src/autoload.php');
 require_once ("src/cors.php");

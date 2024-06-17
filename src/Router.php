@@ -1,11 +1,10 @@
 <?php
 
-
-namespace Igor\Api;
+namespace AntoineD\Api;
 
 require_once "Routes/routes.php";
 require_once "functions.php";
-
+require_once "Controllers/Controller.php";
 class Router
 {
     private string $url;
@@ -24,26 +23,29 @@ class Router
 
     public function render()
     {
-        if(!is_array(routes()[$this->url])){
-            echo send(["error" => 'route not found'], 404);
-        }elseif(routes()[$this->url]['method'] != $this->method){
-            echo send(["error" => 'method not allowed'], 403);
-        }else{
-            $controller = explode('@', routes()[$this->url]['controller']);
-            print_r ($this->execute($controller[0], $controller[1]));
+        $routes = $this->getAvailableRoutes();
+        // isolate the resource name from the url
+        $this->url = explode('/', $this->url)[1];
+        if (!isset($routes[$this->url])) {
+            echo send(["error" => 'Route not found'], 404);
+            return;
         }
+        $route = $routes[$this->url];
+
+
+        $table = $route['table'];
+
+
+        $this->execute($table, $this->method);
     }
 
-    private function execute(String $controller, String $method)
+    // execute function will be responsible for calling the correct method from the generic controller
+    // the generic controller has to be initialized with the correct model given from the table name
+    private function execute($table, $method)
     {
-        $file = $_SERVER['DOCUMENT_ROOT'].'/src/Controllers/'.$controller.'.php';
-        if(!file_exists($file)){
-            return send(["error" => 'internal error'], 500);
-        }
-
-        $controller = "Igor\\Api\\Controllers\\".$controller;
-
-        $control = new $controller();
-        return $control->$method();
+        $controller = new Controllers\GenericController($table);
+        return $controller->handleRequest();
     }
 }
+
+?>

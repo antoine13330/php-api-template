@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Igor\Api\Helpers;
+namespace AntoineD\Api\Helpers;
 
 
 class Validator

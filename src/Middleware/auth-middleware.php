@@ -1,6 +1,6 @@
 <?php
 
-use Igor\Api\Middleware\AuthConfig;
+use AntoineD\Api\Middleware\AuthConfig;
 
 require_once ("AuthConfig.php");
 
