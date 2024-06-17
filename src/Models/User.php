@@ -8,7 +8,7 @@ class User extends Model
     
     public function __construct()
     {
-        parent::__construct('users' , true);
+        parent::__construct('users' , true, ['email', 'password'], ['email','password']);
     }
 
 

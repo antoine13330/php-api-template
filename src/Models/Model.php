@@ -15,13 +15,16 @@ class Model
     public array $recurringUpdateDatas;
     public string $primaryKey;
     public bool $autoUpdateDates = false;
-    
-    public function __construct(string $table, bool $autoUpdateDates = false)
-    {
+    public array $bannedFields = ['deleted' , 'creation_date' , 'change_date', 'id'];
+    public array $authorizedForCreationOnly = [];
+    public function __construct(string $table, bool $autoUpdateDates = false, array $suppBannedFields = [] , array $authorizedForCreationOnly = [])
+    {   
         $this->table = $this->sanitizeTableName($table);
         $tempConn = new Connection();
         $this->conn = $tempConn->connect();
         $this->autoUpdateDates = $autoUpdateDates;
+        $this->bannedFields = array_merge($this->bannedFields, $suppBannedFields);
+        $this->authorizedForCreationOnly = $authorizedForCreationOnly;
     }
 
     private function sanitizeTableName(string $table): string
@@ -55,6 +58,12 @@ class Model
     public function create(array $data): int
     {
         try {
+            foreach ($this->bannedFields as $field) {
+                if (in_array($field, $this->authorizedForCreationOnly)) {
+                    continue;
+                }
+                unset($data[$field]);
+            }
             if ($this->autoUpdateDates) {
                 $data['creation_date'] = date('Y-m-d H:i:s');
                 $data['change_date'] = date('Y-m-d H:i:s');
@@ -72,8 +81,11 @@ class Model
     public function update(int $id, array $data): int
     {
         try {
+            foreach ($this->bannedFields as $field) {
+                unset($data[$field]);
+            }
             if ($this->autoUpdateDates) {
-                $data['updatedAt'] = date('Y-m-d H:i:s');
+                $data['change_date'] = date('Y-m-d H:i:s');
             }
             $fields = '';
             foreach ($data as $key => $value) {
